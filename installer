@@ -1,0 +1,60 @@
+#!/bin/sh
+
+# This is a script which installs all the items in His Grace's Software Suite.
+
+# Let's get cracking...
+cd ~
+sudo apt update
+
+##########
+# BASICS #
+##########
+
+# Install Git.
+sudo apt --yes install git
+
+# Install Chromium.
+sudo apt --yes install chromium-browser
+
+# Install PIP3.
+sudo apt --yes install python3-pip
+
+# Install the extra plugins for Gedit.
+sudo apt --yes install gedit-plugins
+
+################
+# THE SERAGLIO #
+################
+
+# Install SQLite and browser.
+sudo apt --yes install sqlite3
+sudo apt --yes install sqlitebrowser
+
+# Install NodeJS and NPM.
+sudo apt --yes install nodejs
+sudo apt --yes install npm
+
+# Download and install the repo.
+git clone https://github.com/chancellorofpaphos/the-seraglio.git
+cd ~/the-seraglio/
+npm install
+cd ~
+
+############
+# CHANCERY #
+############
+
+# Install LaTeX.
+sudo apt --yes install texlive-full
+
+# Download the repo for Formulary A.
+git clone https://github.com/chancellorofpaphos/chancery-paphos.git
+
+# Download and install the repo for Formulary B.
+git clone https://github.com/chancellorofpaphos/chancery-b-paphos.git
+cd ~/chancery-b-paphos/
+sh install_externals
+cd ~
+
+# That's it!
+echo "***** HGSS installed successfully! *****"
