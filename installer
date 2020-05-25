@@ -2,6 +2,9 @@
 
 # This is a script which installs all the items in His Grace's Software Suite.
 
+# Constants.
+HGSS_DIR="~/hgss/"
+
 # Let's get cracking...
 cd ~
 sudo apt update
@@ -21,6 +24,12 @@ sudo apt --yes install python3-pip
 
 # Install the extra plugins for Gedit.
 sudo apt --yes install gedit-plugins
+
+# Change the wallpaper.
+cd $HGSS_DIR
+sudo cp wallpaper.jpg /usr/share/backgrounds/paphos-wallpaper.jpg
+gsettings set org.gnome.desktop.background picture-uri file:////usr/share/backgrounds/paphos-wallpaper.jpg
+cd ~
 
 ################
 # THE SERAGLIO #
@@ -55,6 +64,18 @@ git clone https://github.com/chancellorofpaphos/chancery-b-paphos.git
 cd ~/chancery-b-paphos/
 sh install_externals
 cd ~
+
+#####################
+# OTHER THIRD PARTY #
+#####################
+
+# Install VeraCrypt.
+sudo add-apt-repository ppa:unit193/encryption
+sudo apt update
+sudo apt --yes install veracrypt
+
+# Install VidCutter.
+sudo snap install vidcutter
 
 # That's it!
 echo "***** HGSS installed successfully! *****"
