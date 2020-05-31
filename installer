@@ -77,5 +77,8 @@ sudo apt --yes install veracrypt
 # Install VidCutter.
 sudo snap install vidcutter
 
+# Install Inkscape.
+sudo apt --yes install inkscape
+
 # That's it!
 echo "***** HGSS installed successfully! *****"
