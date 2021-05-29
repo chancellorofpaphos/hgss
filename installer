@@ -4,6 +4,7 @@
 
 # Constants.
 HGSS_DIR="~/hgss/"
+CHROME_DEB="google-chrome-stable_current_amd64.deb"
 
 # Let's get cracking...
 cd ~
@@ -16,8 +17,10 @@ sudo apt update
 # Install Git.
 sudo apt --yes install git
 
-# Install Chromium.
-sudo apt --yes install chromium-browser
+# Install Google Chrome.
+wget https://dl.google.com/linux/direct/$CHROME_DEB
+sudo dpkg -i $CHROME_DEB
+rm $CHROME_DEB
 
 # Install PIP3.
 sudo apt --yes install python3-pip
