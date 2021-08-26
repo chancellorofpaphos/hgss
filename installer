@@ -6,21 +6,37 @@
 HGSS_DIR="~/hgss/"
 CHROME_DEB="google-chrome-stable_current_amd64.deb"
 
-# Let's get cracking...
-cd ~
-sudo apt update
+# Flags.
+chrome_os_flag="n"
+
+################
+# UPDATE FLAGS #
+################
+
+for flag in $@; do
+    if [ $flag = "--chrome-os" ]; then
+        chrome_os_flag="y"
+    fi
+done
 
 ##########
 # BASICS #
 ##########
 
+# Let's get cracking...
+cd $HOME
+sudo apt update
+sudo apt upgrade
+
 # Install Git.
 sudo apt --yes install git
 
 # Install Google Chrome.
-wget https://dl.google.com/linux/direct/$CHROME_DEB
-sudo dpkg -i $CHROME_DEB
-rm $CHROME_DEB
+if [ chrome_os_flag = "n" ]; then
+    wget https://dl.google.com/linux/direct/$CHROME_DEB
+    sudo dpkg -i $CHROME_DEB
+    rm $CHROME_DEB
+fi
 
 # Install PIP3.
 sudo apt --yes install python3-pip
@@ -38,35 +54,35 @@ cd ~
 # THE SERAGLIO #
 ################
 
-# Install SQLite and browser.
-sudo apt --yes install sqlite3
-sudo apt --yes install sqlitebrowser
-
-# Install NodeJS and NPM.
-sudo apt --yes install nodejs
-sudo apt --yes install npm
-
-# Download and install the repo.
-git clone https://github.com/chancellorofpaphos/the-seraglio.git
-cd ~/the-seraglio/
-npm install
-cd ~
+if [ ! -d the-seraglio ]; then
+    # Install SQLite and browser.
+    sudo apt --yes install sqlite3
+    sudo apt --yes install sqlitebrowser
+    # Install NodeJS and NPM.
+    sudo apt --yes install nodejs
+    sudo apt --yes install npm
+    # Download and install the repo.
+    git clone https://github.com/chancellorofpaphos/the-seraglio.git
+    cd the-seraglio
+    npm install
+    cd ..
+fi
 
 ############
 # CHANCERY #
 ############
 
-# Install LaTeX.
-sudo apt --yes install texlive-full
-
-# Download the repo for Formulary A.
-git clone https://github.com/chancellorofpaphos/chancery-paphos.git
-
-# Download and install the repo for Formulary B.
-git clone https://github.com/chancellorofpaphos/chancery-b-paphos.git
-cd ~/chancery-b-paphos/
-sh install_externals
-cd ~
+if [ ! -d chancery-b-paphos ]; then
+    # Install LaTeX.
+    sudo apt --yes install texlive-full
+    # Download the repo for Formulary A.
+    git clone https://github.com/chancellorofpaphos/chancery-paphos.git
+    # Download and install the repo for Formulary B.
+    git clone https://github.com/chancellorofpaphos/chancery-b-paphos.git
+    cd chancery-b-paphos
+    sh install_externals
+    cd ..
+fi
 
 #####################
 # OTHER THIRD PARTY #
@@ -76,9 +92,6 @@ cd ~
 sudo add-apt-repository ppa:unit193/encryption
 sudo apt update
 sudo apt --yes install veracrypt
-
-# Install VidCutter.
-sudo snap install vidcutter
 
 # Install Inkscape.
 sudo apt --yes install inkscape
