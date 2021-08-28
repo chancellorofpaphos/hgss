@@ -88,11 +88,6 @@ fi
 # OTHER THIRD PARTY #
 #####################
 
-# Install VeraCrypt.
-sudo add-apt-repository ppa:unit193/encryption
-sudo apt update
-sudo apt --yes install veracrypt
-
 # Install Inkscape.
 sudo apt --yes install inkscape
 
