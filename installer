@@ -32,7 +32,7 @@ sudo apt upgrade
 sudo apt --yes install git
 
 # Install Google Chrome.
-if [ chrome_os_flag = "n" ]; then
+if [ $chrome_os_flag = "n" ]; then
     wget https://dl.google.com/linux/direct/$CHROME_DEB
     sudo dpkg -i $CHROME_DEB
     rm $CHROME_DEB
@@ -90,6 +90,11 @@ fi
 
 # Install Inkscape.
 sudo apt --yes install inkscape
+
+# If using a Chromebook, install Nautilus.
+if [ $chrome_os_flag = "y" ]; then
+    sudo apt install nautilus
+fi
 
 # That's it!
 echo "***** HGSS installed successfully! *****"
