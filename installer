@@ -91,9 +91,10 @@ fi
 # Install Inkscape.
 sudo apt --yes install inkscape
 
-# If using a Chromebook, install Nautilus.
+# If using a Chromebook, install some basic utilities.
 if [ $chrome_os_flag = "y" ]; then
-    sudo apt install nautilus
+    sudo apt --yes install nautilus
+    sudo apt --yes install eog
 fi
 
 # That's it!
