@@ -38,8 +38,9 @@ if [ $chrome_os_flag = "n" ]; then
     rm $CHROME_DEB
 fi
 
-# Install PIP3.
+# Install PIP3 and PyLint.
 sudo apt --yes install python3-pip
+pip3 install pylint
 
 # Install the extra plugins for Gedit.
 sudo apt --yes install gedit-plugins
@@ -93,8 +94,9 @@ sudo apt --yes install inkscape
 
 # If using a Chromebook, install some basic utilities.
 if [ $chrome_os_flag = "y" ]; then
-    sudo apt --yes install nautilus
+    sudo apt --yes install chromium
     sudo apt --yes install eog
+    sudo apt --yes install nautilus
 fi
 
 # That's it!
