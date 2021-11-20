@@ -1,23 +1,35 @@
 #!/bin/sh
 
 # This is a script which installs all the items in His Grace's Software Suite.
+# It assumes that the actions performed in the pre-installer, i.e. setting up
+# Git, have already been carried out.
 
 # Constants.
 HGSS_DIR="~/hgss/"
 CHROME_DEB="google-chrome-stable_current_amd64.deb"
 
-# Flags.
-chrome_os_flag="n"
+#############
+# SET FLAGS #
+#############
 
-################
-# UPDATE FLAGS #
-################
+chrome_os_flag="n"
+ignore_errors_flag="n"
+minimal_flag="n"
 
 for flag in $@; do
     if [ $flag = "--chrome-os" ]; then
         chrome_os_flag="y"
+    elif [ $flag = "--ignore-errors" ]; then
+        ignore_errors_flag="y"
+    elif [ $flag = "--minimal" ]; then
+        minimal_flag="y"
     fi
 done
+
+# Make any non-zero returns throw an error, if appropriate.
+if [ $ignore_errors_flag = "n" ]; then
+    set -e
+fi
 
 ##########
 # BASICS #
@@ -26,7 +38,7 @@ done
 # Let's get cracking...
 cd $HOME
 sudo apt update
-sudo apt upgrade
+sudo apt --yes upgrade
 
 # Install Git.
 sudo apt --yes install git
@@ -55,7 +67,7 @@ cd ~
 # THE SERAGLIO #
 ################
 
-if [ ! -d the-seraglio ]; then
+if [ ! -d the-seraglio ] && [ $minimal_flag = "n" ]; then
     # Install SQLite and browser.
     sudo apt --yes install sqlite3
     sudo apt --yes install sqlitebrowser
@@ -73,7 +85,7 @@ fi
 # CHANCERY #
 ############
 
-if [ ! -d chancery-b-paphos ]; then
+if [ ! -d chancery-b-paphos ] && [ $minimal_flag = "n" ]; then
     # Install LaTeX.
     sudo apt --yes install texlive-full
     # Download the repo for Formulary A.
