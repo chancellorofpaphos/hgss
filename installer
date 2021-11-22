@@ -5,7 +5,7 @@
 # Git, have already been carried out.
 
 # Constants.
-HGSS_DIR="~/hgss/"
+HGSS_DIR="$HOME/hgss/"
 CHROME_DEB="google-chrome-stable_current_amd64.deb"
 
 #############
@@ -40,9 +40,6 @@ cd $HOME
 sudo apt update
 sudo apt --yes upgrade
 
-# Install Git.
-sudo apt --yes install git
-
 # Install Google Chrome.
 if [ $chrome_os_flag = "n" ]; then
     wget https://dl.google.com/linux/direct/$CHROME_DEB
@@ -59,9 +56,9 @@ sudo apt --yes install gedit-plugins
 
 # Change the wallpaper.
 cd $HGSS_DIR
-sudo cp wallpaper.jpg /usr/share/backgrounds/paphos-wallpaper.jpg
-gsettings set org.gnome.desktop.background picture-uri file:////usr/share/backgrounds/paphos-wallpaper.jpg
-cd ~
+sudo cp wallpaper.jpg /usr/share/backgrounds/paphos-wallpaper.jpg || true
+gsettings set org.gnome.desktop.background picture-uri file:////usr/share/backgrounds/paphos-wallpaper.jpg || true
+cd $HOME
 
 ################
 # THE SERAGLIO #

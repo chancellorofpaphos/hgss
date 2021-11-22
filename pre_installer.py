@@ -19,10 +19,10 @@ DEFAULT_HGSS_URL = "https://github.com/chancellorofpaphos/hgss.git"
 DEFAULT_PATH_TO_GIT_CREDENTIALS = \
     os.path.join(PATH_TO_HOME, ".git-credentials")
 DEFAULT_PATH_TO_HGSS = os.path.join(PATH_TO_HOME, "hgss")
-DEFAULT_PATH_TO_LOG = os.path.join(PATH_TO_HOME, "auto_commit.log")
 DEFAULT_PATH_TO_PAT = \
     os.path.join(PATH_TO_HOME, "personal_access_token.txt")
 DEFAULT_USERNAME = "chancellorofpaphos"
+DEFAULT_EMAIL = "chancellorofpaphos@protonmail.com"
 
 #############
 # FUNCTIONS #
@@ -34,10 +34,23 @@ def make_github_credential(pat, username=DEFAULT_USERNAME):
     result = "https://"+username+":"+pat+"@github.com"
     return result
 
-def set_up_git_credentials(
+def set_username_and_email(username=DEFAULT_USERNAME, email=DEFAULT_EMAIL):
+    """ Set the global Git username and email. """
+    subprocess.run(
+        ["git", "config", "--global", "user.name", username],
+        check=True
+    )
+    subprocess.run(
+        ["git", "config", "--global", "user.email", email],
+        check=True
+    )
+
+def set_git_credentials(
         path_to_git_credentials=DEFAULT_PATH_TO_GIT_CREDENTIALS,
-        path_to_pat=DEFAULT_PATH_TO_PAT):
+        path_to_pat=DEFAULT_PATH_TO_PAT, username=DEFAULT_USERNAME,
+        email=DEFAULT_EMAIL):
     """ Set up GIT credentials, if necessary and possible. """
+    set_username_and_email(username=username, email=email)
     if os.path.exists(path_to_pat):
         with open(path_to_pat, "r") as pat_file:
             pat = pat_file.read()
@@ -55,7 +68,7 @@ def set_up_git_credentials(
         "config",
         "--global",
         "credential.helper",
-        "\"store --file "+path_to_git_credentials+"\""
+        "store --file "+path_to_git_credentials
     ]
     subprocess.run(commands, check=True)
     print("GIT credentials set up!")
@@ -86,7 +99,7 @@ def run_installer(path_to_hgss=DEFAULT_PATH_TO_HGSS, args=[]):
 def run():
     """ Run this file. """
     install_git()
-    set_up_git_credentials()
+    set_git_credentials()
     clone_hgss()
     if "--run-installer" in sys.argv:
         run_installer(args=sys.argv)
