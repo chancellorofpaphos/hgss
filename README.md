@@ -6,4 +6,4 @@
 
 1. Download a copy of this repository to the system in question.
 1. Navigate to this repository's directory.
-1. Run `sh installer`.
+1. Run `sh installer.sh`.
