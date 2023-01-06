@@ -1,19 +1,11 @@
 #!/bin/sh
 
-# This is a script which installs all the items in His Grace's Software Suite.
-# It assumes that the actions performed in the pre-installer, i.e. setting up
-# Git, have already been carried out.
+### This is script installs all the items in His Grace's Software Suite. It
+### assumes that the actions performed in the pre-installer, i.e. setting up
+### Git, have already been carried out.
 
-# Constants.
-PATH_TO_PERSONAL_ACCESS_TOKEN="$HOME/personal_access_token.txt"
-PERSONAL_ACCESS_TOKEN=`cat $PATH_TO_PERSONAL_ACCESS_TOKEN`
-GIT_USERNAME="chancellorofpaphos"
-GIT_CREDENTIAL="https://$GIT_USERNAME:$PERSONAL_ACCESS_TOKEN@github.com"
-PATH_TO_GIT_CREDENTIALS="$HOME/.git-credentials"
-EMAIL="chancellorofpaphos@protonmail.com"
-HGSS_DIR=$(dirname $(realpath $0))
-CHROME_DEB="google-chrome-stable_current_amd64.deb"
-WALLPAPER_DEST="/usr/share/backgrounds/paphos-wallpaper.jpg"
+# Import constants.
+. $(dirname $0)/constants.sh
 
 #############
 # SET FLAGS #
@@ -34,7 +26,7 @@ for flag in $@; do
 done
 
 # Make any non-zero returns throw an error, if appropriate.
-if [ $ignore_errors_flag = "false" ]; then
+if $ignore_errors_flag; then
     set -e
 fi
 
@@ -45,8 +37,7 @@ fi
 sudo apt install git
 git config --global user.name $GIT_USERNAME
 git config --global user.email $EMAIL
-echo $GIT_CREDENTIAL > $PATH_TO_GIT_CREDENTIALS
-git config --global credential.helper store $PATH_TO_GIT_CREDENTIALS
+sh $(dirname $0)/renew_git_credentials.sh
 
 ##########
 # BASICS #
@@ -81,23 +72,27 @@ gsettings set org.gnome.desktop.background picture-uri file:///$WALLPAPER_DEST |
 #####################
 
 # This is where we're going to install our own repos.
-cd $HOME
+if $minimal_flag; then
+    echo "Minimal flag is TRUE. Skipping installing own repos..."
+else
+    cd $HOME
 
-if [ ! -d the-seraglio ] && [ $minimal_flag = "false" ]; then
-    sudo apt --yes install npm
-    # Download and install the repo.
-    git clone https://github.com/chancellorofpaphos/the-seraglio.git
+    if [ ! -d the-seraglio ]; then
+        sudo apt --yes install npm
+        # Download and install the repo.
+        git clone https://github.com/chancellorofpaphos/the-seraglio.git
+    fi
+
+    if [ ! -d chancery-b-paphos ]; then
+        # Download the repo for Formulary A.
+        git clone https://github.com/chancellorofpaphos/chancery-paphos.git
+        # Download and install the repo for Formulary B.
+        git clone https://github.com/chancellorofpaphos/chancery-b-paphos.git
+    fi
+
+    # A sensible precaution.
+    cd $HGSS_DIR
 fi
-
-if [ ! -d chancery-b-paphos ] && [ $minimal_flag = "false" ]; then
-    # Download the repo for Formulary A.
-    git clone https://github.com/chancellorofpaphos/chancery-paphos.git
-    # Download and install the repo for Formulary B.
-    git clone https://github.com/chancellorofpaphos/chancery-b-paphos.git
-fi
-
-# A sensible precaution.
-cd $HGSS_DIR
 
 #####################
 # OTHER THIRD PARTY #
