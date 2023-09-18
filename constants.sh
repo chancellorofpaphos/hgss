@@ -2,11 +2,6 @@
 
 ### This code defines some constants used across the scripts.
 
-# Make any non-zero returns throw an error, if appropriate.
-if $ignore_errors_flag; then
-    set -e
-fi
-
 # Misc.
 EMAIL="chancellorofpaphos@protonmail.com"
 HGSS_DIR=$(dirname $(realpath $0))

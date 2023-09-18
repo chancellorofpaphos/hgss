@@ -1,8 +1,6 @@
 #!/bin/sh
 
-### This is script installs all the items in His Grace's Software Suite. It
-### assumes that the actions performed in the pre-installer, i.e. setting up
-### Git, have already been carried out.
+### This is script installs all the items in His Grace's Software Suite.
 
 # Import constants.
 . $(dirname $0)/constants.sh
@@ -25,8 +23,8 @@ for flag in $@; do
     fi
 done
 
-# Make any non-zero returns throw an error, if appropriate.
-if $ignore_errors_flag; then
+# Throw an error on the first non-zero return code, if appropriate.
+if ! $ignore_errors_flag; then
     set -e
 fi
 
@@ -37,7 +35,7 @@ fi
 sudo apt install git
 git config --global user.name $GIT_USERNAME
 git config --global user.email $EMAIL
-sh $(dirname $0)/renew_git_credentials.sh
+sh $HGSS_DIR/renew_git_credentials.sh
 
 ##########
 # BASICS #
@@ -56,9 +54,8 @@ else
     rm $CHROME_DEB
 fi
 
-# Install PIP3 and PyLint.
+# Install PIP.
 sudo apt --yes install python3-pip
-pip3 install pylint
 
 # Install the extra plugins for Gedit.
 sudo apt --yes install gedit-plugins
@@ -98,14 +95,15 @@ fi
 # OTHER THIRD PARTY #
 #####################
 
+# Install srm, sfill, etc.
+sudo apt --yes install secure-delete
+
 # Install Inkscape.
 sudo apt --yes install inkscape
 
 # If using a Chromebook, install some basic utilities.
 if $chrome_os_flag; then
-    sudo apt --yes install chromium
-    sudo apt --yes install eog
-    sudo apt --yes install nautilus
+    sudo apt --yes install chromium eog nautilus
 fi
 
 # That's it!
