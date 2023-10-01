@@ -91,7 +91,7 @@ else
 
     # Install custom ffmpeg scripts.
     rm -rf ffmpeg_scripts/
-    cp -r $HGSS_DIR/useful_scripts/ffmpeg/ ffmpeg_scripts/
+    cp -r $HGSS_DIR/useful_scripts/ffmpeg/ $HOME/ffmpeg_scripts/
 fi
 
 #####################
