@@ -64,13 +64,12 @@ sudo apt --yes install gedit-plugins
 sudo cp $HGSS_DIR/wallpaper.jpg $WALLPAPER_DEST || true
 gsettings set org.gnome.desktop.background picture-uri file:///$WALLPAPER_DEST || true
 
-#####################
-# INSTALL OWN REPOS #
-#####################
+####################
+# INSTALL OWN CODE #
+####################
 
-# This is where we're going to install our own repos.
 if $minimal_flag; then
-    echo "Minimal flag is TRUE. Skipping installing own repos..."
+    echo "Minimal flag is TRUE. Skipping installing own code..."
 else
     cd $HOME
 
@@ -89,6 +88,10 @@ else
 
     # A sensible precaution.
     cd $HGSS_DIR
+
+    # Install custom ffmpeg scripts.
+    rm -rf ffmpeg_scripts/
+    cp -r $HGSS_DIR/useful_scripts/ffmpeg/ ffmpeg_scripts/
 fi
 
 #####################
@@ -97,6 +100,9 @@ fi
 
 # Install srm, sfill, etc.
 sudo apt --yes install secure-delete
+
+# Install ffmpeg.
+sudo apt --yes install ffmpeg
 
 # Install Inkscape.
 sudo apt --yes install inkscape
