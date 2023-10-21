@@ -48,6 +48,7 @@ sudo apt --yes upgrade
 # Install Google Chrome.
 if $chrome_os_flag; then
     sh $HGSS_DIR/make_chromebook_symlinks.sh
+    sudo apt --yes install chromium eog nautilus
 else
     wget https://dl.google.com/linux/direct/$CHROME_DEB
     sudo dpkg -i $CHROME_DEB
@@ -106,11 +107,6 @@ sudo apt --yes install ffmpeg
 
 # Install Inkscape.
 sudo apt --yes install inkscape
-
-# If using a Chromebook, install some basic utilities.
-if $chrome_os_flag; then
-    sudo apt --yes install chromium eog nautilus
-fi
 
 # That's it!
 echo "***** HGSS installed successfully! *****"

@@ -5,9 +5,13 @@
 # Import constants.
 . $(dirname $0)/constants.sh
 
-# Make any non-zero returns throw an error, if appropriate.
-if $ignore_errors_flag; then
-    set -e
+# Crash on the first non-zero exit code.
+set -e
+
+# Check that the personal access token file exists.
+if ! [ -f $PATH_TO_PERSONAL_ACCESS_TOKEN ]; then
+    echo "No personal access token file at: $PATH_TO_PERSONAL_ACCESS_TOKEN"
+    exit 1
 fi
 
 # Let's get cracking...
