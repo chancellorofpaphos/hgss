@@ -10,12 +10,15 @@
 #############
 
 chrome_os_flag=false
+raspberry_pi_flag=false
 ignore_errors_flag=false
 minimal_flag=false
 
 for flag in $@; do
     if [ $flag = "--chrome-os" ]; then
         chrome_os_flag=true
+    elif [ $flag = "--raspberry-pi" ]; then
+	raspberry_pi_flag=true
     elif [ $flag = "--ignore-errors" ]; then
         ignore_errors_flag=true
     elif [ $flag = "--minimal" ]; then
@@ -49,7 +52,7 @@ sudo apt --yes upgrade
 if $chrome_os_flag; then
     sh $HGSS_DIR/make_chromebook_symlinks.sh
     sudo apt --yes install chromium eog nautilus
-else
+elif ! $raspberry_pi_flag; then
     wget https://dl.google.com/linux/direct/$CHROME_DEB
     sudo dpkg -i $CHROME_DEB
     rm $CHROME_DEB
