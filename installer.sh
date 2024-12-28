@@ -2,114 +2,79 @@
 
 ### This is script installs all the items in His Grace's Software Suite.
 
-# Import constants.
-. $(dirname $0)/constants.sh
+# Local constants.
+STANDARD_PACKAGES="eog ffmpeg gedit gedit-plugins inkscape python3 python3-pip secure-delete"
+CHROME_FRIENDLY_FILE_MANAGER="dolphin"
+CHROMEBOOK_ONLY_PACKAGES="$CHROME_FRIENDLY_FILE_MANAGER eog nautilus"
+OTHER_THIRD_PARTY=
+HGSS_DIR=$(dirname $(realpath $0))
+WALLPAPER_DST_DIR="/usr/share/backgrounds"
+WALLPAPER_DST="$WALLPAPER_DST_DIR/paphos_wallpaper.jpg"
+# Colours.
+GREEN="\e[1;32m"
+YELLOW="\e[1;33m"
+RESET="\e[0m"
 
 #############
 # SET FLAGS #
 #############
 
 chrome_os_flag=false
-raspberry_pi_flag=false
-ignore_errors_flag=false
-minimal_flag=false
 
 for flag in $@; do
     if [ $flag = "--chrome-os" ]; then
         chrome_os_flag=true
-    elif [ $flag = "--raspberry-pi" ]; then
-	raspberry_pi_flag=true
-    elif [ $flag = "--ignore-errors" ]; then
-        ignore_errors_flag=true
-    elif [ $flag = "--minimal" ]; then
-        minimal_flag=true
     fi
 done
 
-# Throw an error on the first non-zero return code, if appropriate.
-if ! $ignore_errors_flag; then
-    set -e
-fi
-
-##############
-# SET UP GIT #
-##############
-
-sudo apt install git
-git config --global user.name $GIT_USERNAME
-git config --global user.email $EMAIL
-sh $HGSS_DIR/renew_git_credentials.sh
+set -e  # Crash on the first non-zero return code.
 
 ##########
 # BASICS #
 ##########
 
 # Let's get cracking...
+echo "$GREEN Installing HGSS... $RESET"
 sudo apt update
-sudo apt --yes upgrade
+sudo apt upgrade --yes
 
-# Install Google Chrome.
+sudo apt install --yes $STANDARD_PACKAGES
+
 if $chrome_os_flag; then
-    sh $HGSS_DIR/make_chromebook_symlinks.sh
-    sudo apt --yes install chromium eog nautilus
-elif ! $raspberry_pi_flag; then
-    wget https://dl.google.com/linux/direct/$CHROME_DEB
-    sudo dpkg -i $CHROME_DEB
-    rm $CHROME_DEB
+    sudo apt install --yes $CHROMEBOOK_ONLY_PACKAGES
 fi
 
-# Install PIP.
-sudo apt --yes install python3-pip
-
-# Install the extra plugins for Gedit.
-sudo apt --yes install gedit-plugins
-
 # Change the wallpaper.
-sudo cp $HGSS_DIR/wallpaper.jpg $WALLPAPER_DEST || true
-gsettings set org.gnome.desktop.background picture-uri file:///$WALLPAPER_DEST || true
+sudo mkdir -p $WALLPAPER_DST_DIR
+sudo cp "$HGSS_DIR/wallpaper.jpg" $WALLPAPER_DST || true
+gsettings set org.gnome.desktop.background picture-uri \
+    file:///$WALLPAPER_DST || true
 
 ####################
 # INSTALL OWN CODE #
 ####################
 
-if $minimal_flag; then
-    echo "Minimal flag is TRUE. Skipping installing own code..."
+cd $HOME  # Clone into the home directory.
+
+if [ -d the-seraglio ]; then
+    echo "$YELLOW Looks like we've already cloned the Seraglio. $RESET"
 else
-    cd $HOME
-
-    if [ ! -d the-seraglio ]; then
-        sudo apt --yes install npm
-        # Download and install the repo.
-        git clone https://github.com/chancellorofpaphos/the-seraglio.git
-    fi
-
-    if [ ! -d chancery-b-paphos ]; then
-        # Download the repo for Formulary A.
-        git clone https://github.com/chancellorofpaphos/chancery-paphos.git
-        # Download and install the repo for Formulary B.
-        git clone https://github.com/chancellorofpaphos/chancery-b-paphos.git
-    fi
-
-    # A sensible precaution.
-    cd $HGSS_DIR
-
-    # Install custom ffmpeg scripts.
-    rm -rf $HOME/ffmpeg_scripts/
-    cp -r $HGSS_DIR/useful_scripts/ffmpeg/ $HOME/ffmpeg_scripts/
+    git clone git@github.com:chancellorofpaphos/the-seraglio.git
 fi
 
-#####################
-# OTHER THIRD PARTY #
-#####################
+if [ -d chancery-paphos ]; then
+    echo "$YELLOW Looks like we've already cloned the Chancery. $RESET"
+else
+    git clone git@github.com:chancellorofpaphos/chancery-paphos.git
+fi
 
-# Install srm, sfill, etc.
-sudo apt --yes install secure-delete
+if [ -d chancery-b-paphos ]; then
+    echo "$YELLOW Looks like we've already cloned the Chancery, Formulary B. $RESET"
+else
+    git clone git@github.com:chancellorofpaphos/chancery-b-paphos.git
+fi
 
-# Install ffmpeg.
-sudo apt --yes install ffmpeg
-
-# Install Inkscape.
-sudo apt --yes install inkscape
+cd $HGSS_DIR  # A sensible precaution.
 
 # That's it!
-echo "***** HGSS installed successfully! *****"
+echo "$GREEN HGSS installed successfully. $RESET"
