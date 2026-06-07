@@ -3,11 +3,11 @@
 ### This is script installs all the items in His Grace's Software Suite.
 
 # Local constants.
-STANDARD_PACKAGES="eog ffmpeg gedit gedit-plugins inkscape python3 python3-pip secure-delete"
-CHROME_FRIENDLY_FILE_MANAGER="dolphin"
-CHROMEBOOK_ONLY_PACKAGES="$CHROME_FRIENDLY_FILE_MANAGER eog nautilus"
-OTHER_THIRD_PARTY=
+STANDARD_PACKAGES="ffmpeg gedit gedit-plugins inkscape python3 python3-pip secure-delete"
+CHROME_FRIENDLY_FILE_MANAGER="pcmanfm"
+CHROMEBOOK_ONLY_PACKAGES="$CHROME_FRIENDLY_FILE_MANAGER eog"
 HGSS_DIR=$(dirname $(realpath $0))
+REPOS_TO_CLONE="chancery-paphos chancery-b-paphos the-seraglio"
 WALLPAPER_DST_DIR="/usr/share/backgrounds"
 WALLPAPER_DST="$WALLPAPER_DST_DIR/paphos_wallpaper.jpg"
 # Colours.
@@ -54,27 +54,19 @@ gsettings set org.gnome.desktop.background picture-uri \
 # INSTALL OWN CODE #
 ####################
 
+original_dir=${pwd}
 cd $HOME  # Clone into the home directory.
 
-if [ -d the-seraglio ]; then
-    echo "$YELLOW Looks like we've already cloned the Seraglio. $RESET"
-else
-    git clone git@github.com:chancellorofpaphos/the-seraglio.git
-fi
+for repo in $REPOS_TO_CLONE; do
+    if [ -d $repo ]; then
+        echo "$YELLOW Looks like we've already cloned $repo. $RESET"
+    else
+        git clone git@github.com:chancellorofpaphos/$repo.git
+    fi
+done
 
-if [ -d chancery-paphos ]; then
-    echo "$YELLOW Looks like we've already cloned the Chancery. $RESET"
-else
-    git clone git@github.com:chancellorofpaphos/chancery-paphos.git
-fi
-
-if [ -d chancery-b-paphos ]; then
-    echo "$YELLOW Looks like we've already cloned the Chancery, Formulary B. $RESET"
-else
-    git clone git@github.com:chancellorofpaphos/chancery-b-paphos.git
-fi
-
-cd $HGSS_DIR  # A sensible precaution.
+cd $original_dir
+pwd
 
 # That's it!
 echo "$GREEN HGSS installed successfully. $RESET"
