@@ -5,7 +5,7 @@
 set -e  # Crash on the first non-zero return code.
 
 # Local constants.
-STANDARD_PACKAGES="ffmpeg gedit gedit-plugins git inkscape python3 python3-pip secure-delete veracrypt"
+STANDARD_PACKAGES="ffmpeg gedit gedit-plugins git inkscape python3 python3-pip secure-delete wget"
 HGSS_DIR=$(dirname "$(realpath "$0")")
 REPOS_TO_CLONE="chancery-paphos chancery-b-paphos the-seraglio"
 WALLPAPER_DST_DIR="/usr/share/backgrounds"
@@ -25,6 +25,7 @@ sudo apt update
 sudo apt upgrade --yes
 
 sudo apt install --yes $STANDARD_PACKAGES
+sh "$HGSS_DIR/installers/veracrypt.sh"
 
 # Change the wallpaper.
 sudo mkdir -p "$WALLPAPER_DST_DIR"
