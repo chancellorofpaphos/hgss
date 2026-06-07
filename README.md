@@ -7,3 +7,7 @@
 1. Download a copy of this repository to the system in question.
 1. Navigate to this repository's directory.
 1. Run `sh install.sh`.
+
+## Tests
+
+Run `sh tests/useful_scripts_test.sh`.
