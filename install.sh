@@ -5,9 +5,7 @@
 set -e  # Crash on the first non-zero return code.
 
 # Local constants.
-STANDARD_PACKAGES="ffmpeg gedit gedit-plugins git inkscape python3 python3-pip secure-delete"
-CHROME_FRIENDLY_FILE_MANAGER="pcmanfm"
-CHROMEBOOK_ONLY_PACKAGES="$CHROME_FRIENDLY_FILE_MANAGER eog"
+STANDARD_PACKAGES="ffmpeg gedit gedit-plugins git inkscape python3 python3-pip secure-delete veracrypt"
 HGSS_DIR=$(dirname "$(realpath "$0")")
 REPOS_TO_CLONE="chancery-paphos chancery-b-paphos the-seraglio"
 WALLPAPER_DST_DIR="/usr/share/backgrounds"
@@ -16,18 +14,6 @@ WALLPAPER_DST="$WALLPAPER_DST_DIR/paphos_wallpaper.jpg"
 GREEN="$(printf '\033[1;32m')"
 YELLOW="$(printf '\033[1;33m')"
 RESET="$(printf '\033[0m')"
-
-#############
-# SET FLAGS #
-#############
-
-chrome_os_flag=false
-
-for flag in "$@"; do
-    if [ "$flag" = "--chrome-os" ]; then
-        chrome_os_flag=true
-    fi
-done
 
 ##########
 # BASICS #
@@ -39,10 +25,6 @@ sudo apt update
 sudo apt upgrade --yes
 
 sudo apt install --yes $STANDARD_PACKAGES
-
-if $chrome_os_flag; then
-    sudo apt install --yes $CHROMEBOOK_ONLY_PACKAGES
-fi
 
 # Change the wallpaper.
 sudo mkdir -p "$WALLPAPER_DST_DIR"
