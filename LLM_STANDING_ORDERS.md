@@ -1,0 +1,1 @@
+- All commit messages must be preceded with `[codex] `.
